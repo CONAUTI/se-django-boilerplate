@@ -100,8 +100,6 @@ jobs:
 
       - name: Deploy
         run: |-
-          echo "${{ secrets.GCP_SA_KEY }}" > sa-key.json
-          export SERVICE_ACCOUNT_EMAIL=$(jq -r '.client_email' sa-key.json)
           gcloud run deploy ${{ steps.repo-name.outputs.repository-name }} \
           --region $REGION \
           --image $REGION-docker.pkg.dev/$PROJECT_ID/${{ steps.repo-name.outputs.repository-name }}/${{ steps.repo-name.outputs.repository-name }}:$GITHUB_SHA \
