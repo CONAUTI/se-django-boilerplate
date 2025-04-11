@@ -1,0 +1,13 @@
+version: '3'
+services:
+  api:
+    image: $IMAGE
+    working_dir: /$WORKDIR
+    command: python3 manage.py runserver 0.0.0.0:$HTTP_PORT
+    environment:
+      PORT: $HTTP_PORT
+      APP_ENV: $APP_ENV
+    volumes:
+      - ./$PROJECT_DIR:$WORKDIR
+    ports:
+      - $HTTP_PORT:$HTTP_PORT
