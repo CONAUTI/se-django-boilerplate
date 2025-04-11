@@ -91,7 +91,7 @@ jobs:
         run: |
           make ct.copy DEST_DIR=prod
 
-      - name: Extract service account email from JSON
+      - name: Extract service account email from JSON string
         id: sa-email
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' | jq -r 'fromjson | .client_email' > email.txt
