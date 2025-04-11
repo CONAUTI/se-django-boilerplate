@@ -94,8 +94,8 @@ jobs:
       - name: Extract service account email from JSON
         id: sa-email
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > sa-key.json
-          email=$(jq -r '.client_email' sa-key.json)
+          echo '${{ secrets.GCP_SA_KEY }}' | jq -r 'fromjson | .client_email' > email.txt
+          email=$(cat email.txt)
           echo "email=$email" >> $GITHUB_OUTPUT
 
       - name: Deploy
