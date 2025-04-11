@@ -90,7 +90,14 @@ jobs:
       - name: Copy requirements to docker
         run: |
           make ct.copy DEST_DIR=prod
-          
+
+      - name: Extract service account email from JSON
+        id: sa-email
+        run: |
+          echo "${{ secrets.GCP_SA_KEY }}" > sa-key.json
+          email=$(jq -r '.client_email' sa-key.json)
+          echo "email=$email" >> $GITHUB_OUTPUT
+
       - name: Deploy
         run: |-
           echo "${{ secrets.GCP_SA_KEY }}" > sa-key.json
@@ -99,7 +106,7 @@ jobs:
           --region $REGION \
           --image $REGION-docker.pkg.dev/$PROJECT_ID/${{ steps.repo-name.outputs.repository-name }}/${{ steps.repo-name.outputs.repository-name }}:$GITHUB_SHA \
           --platform "managed" \
-          --service-account $SERVICE_ACCOUNT_EMAIL \
+          --service-account ${{ steps.sa-email.outputs.email }} \
           --port $HTTP_PORT \
           --set-env-vars PROJECT_ID=$PROJECT_ID,REGION=$REGION,SECRET_KEY=$SECRET_KEY \
           --quiet
