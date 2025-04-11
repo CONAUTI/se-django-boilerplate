@@ -13,9 +13,6 @@ env:
   SERVICE_ACCOUNT_EMAIL: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
   GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
   HTTP_PORT: 8080
-  CLOUDRUN_SERVICE_URL: ${{ secrets.CLOUDRUN_SERVICE_URL }}
-  BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-  BUCKET_URL: https://storage.googleapis.com/${{ secrets.BUCKET_NAME }}
   SECRET_KEY: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
 
 jobs:
@@ -190,7 +187,7 @@ jobs:
           --platform "managed" \
           --service-account $SERVICE_ACCOUNT_EMAIL \
           --port $HTTP_PORT \
-          --set-env-vars PROJECT_ID=$PROJECT_ID,REGION=$REGION,CLOUDRUN_SERVICE_URL=$CLOUDRUN_SERVICE_URL,BUCKET_URL=$BUCKET_URL,PROJECT_NAME=${{ steps.repo-name.outputs.repository-name }},SECRET_KEY=$SECRET_KEY \
+          --set-env-vars PROJECT_ID=$PROJECT_ID,REGION=$REGION,SECRET_KEY=$SECRET_KEY \
           --quiet
 
       - name: Hacer el servicio público (Permitir invocaciones no autenticadas)
