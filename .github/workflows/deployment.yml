@@ -95,9 +95,7 @@ jobs:
         id: sa-email
         run: |
           echo "${{ secrets.GCP_SA_KEY }}" > sa-key.json
-          # echo "SERVICE_ACCOUNT_EMAIL=$(jq -r '.client_email' sa-key.json)" >> $GITHUB_ENV
-          ## print in console the service account email but not save it in env
-          echo "SERVICE_ACCOUNT_EMAIL=$(jq -r '.client_email' sa-key.json)"
+          echo "SERVICE_ACCOUNT_EMAIL=$(jq -r '.client_email' sa-key.json)" >> $GITHUB_ENV
 
       - name: Deploy
         run: |-
@@ -105,7 +103,7 @@ jobs:
           --region $REGION \
           --image $REGION-docker.pkg.dev/$PROJECT_ID/${{ steps.repo-name.outputs.repository-name }}/${{ steps.repo-name.outputs.repository-name }}:$GITHUB_SHA \
           --platform "managed" \
-          --service-account 'se-django-boilerplate@conauti-core.iam.gserviceaccount.com' \
+          --service-account $SERVICE_ACCOUNT_EMAIL \
           --port $HTTP_PORT \
           --set-env-vars PROJECT_ID=$PROJECT_ID,REGION=$REGION,SECRET_KEY=$SECRET_KEY \
           --quiet
