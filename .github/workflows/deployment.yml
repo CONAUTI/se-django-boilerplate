@@ -91,12 +91,14 @@ jobs:
         run: |
           make ct.copy DEST_DIR=prod
 
-      - name: Decode key and extract service account email
+      - name: Extract client_email from raw multiline JSON secret
         id: sa-email
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" | base64 --decode > sa-key.json
-          email=$(jq -r '.client_email' sa-key.json)
-          echo "email=$email" >> $GITHUB_OUTPUT
+            cat > sa-key.json <<EOF
+            ${{ secrets.GCP_SA_KEY }}
+            EOF
+                email=$(jq -r '.client_email' sa-key.json)
+                echo "email=$email" >> $GITHUB_OUTPUT
 
       - name: Deploy
         run: |-
